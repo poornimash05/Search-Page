@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Page</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.2/angular.min.js"></script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2rem;
+            color: #444;
+        }
+
+        .search-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .search-box input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .search-box select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .results {
+            margin-top: 20px;
+        }
+
+        .result {
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            background: #fafafa;
+            transition: background 0.3s;
+        }
+
+        .result:hover {
+            background: #f1f1f1;
+        }
+
+        .result h2 {
+            margin: 0 0 10px;
+            font-size: 1.5rem;
+            color: #222;
+        }
+
+        .result p {
+            margin: 0 0 5px;
+            color: #555;
+        }
+
+        .result .category {
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        @media (max-width: 600px) {
+            .search-box {
+                flex-direction: column;
+            }
+
+            .search-box input[type="text"],
+            .search-box select {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body ng-app="searchApp" ng-controller="SearchController">
+    <div class="container">
+        <h1>Search Blog</h1>
+        <div class="search-box">
+            <input type="text" ng-model="searchQuery" placeholder="Search blog posts...">
+            <select ng-model="filterCategory">
+                <option value="">All Categories</option>
+                <option ng-repeat="category in categories" value="{{category}}">{{category}}</option>
+            </select>
+        </div>
+        <div class="results">
+            <div class="result" ng-repeat="post in filteredPosts = (posts | filter:searchQuery | filter:{category: filterCategory})">
+                <h2>{{post.title}}</h2>
+                <p>{{post.excerpt}}</p>
+                <span class="category">Category: {{post.category}}</span>
+            </div>
+            <p ng-if="filteredPosts.length === 0">No results found.</p>
+        </div>
+    </div>
+
+    <script>
+        const app = angular.module('searchApp', []);
+
+        app.controller('SearchController', function($scope) {
+            $scope.searchQuery = '';
+            $scope.filterCategory = '';
+
+            $scope.categories = ['Technology', 'Lifestyle', 'Travel', 'Education'];
+
+            $scope.posts = [
+                { title: 'Tech Trends 2024', excerpt: 'Exploring upcoming technology trends...', category: 'Technology' },
+                { title: 'Healthy Living Tips', excerpt: 'Practical advice for a healthy lifestyle...', category: 'Lifestyle' },
+                { title: 'Top Travel Destinations', excerpt: 'Must-visit places around the globe...', category: 'Travel' },
+                { title: 'Learning Online', excerpt: 'How to make the most of online courses...', category: 'Education' },
+            ];
+        });
+    </script>
+</body>
+</html>
